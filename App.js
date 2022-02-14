@@ -15,7 +15,8 @@ import MainStatistics from "./screens/MainStatistics";
 import Statistics from "./screens/Statistics";
 // import CalenderJob from "./screens/CalenderTestcopy";
 import NewEditUsers from "./screens/NewEditUsers2";
-import EditUser from "./screens/EditUser";
+import NewEditAdmin from "./screens/NewEditUsers";
+
 import UserManual from "./screens/test";
 import UserManual2 from "./screens/test2";
 import AppLoading from "expo-app-loading";
@@ -26,6 +27,7 @@ import Carouselwood from "./screens/Carouselwood";
 import Carouselwoods from "./screens/Carouselwoods";
 import UserMain from "./screens/UserMain";
 import ShowEditUser from "./screens/ShowEditUser";
+import ShowEditAdmin from "./screens/ShowEditAdmin";
 import ShowEditUserAdmin from "./screens/ShowEditUserAdmin";
 
 import SearchEditUserAdmin from "./screens/SearchEditUserAdmin";
@@ -37,7 +39,7 @@ import * as Font from "expo-font";
 import Test from "./screens/test";
 import Home from "./Home";
 import Home2 from "./Home2";
-import CalenderTest from "./screens/CalenderTest";
+import ConfirmAccessUser from "./screens/ConfirmAccessUser";
 import GetNumber from "./screens/GetNumber";
 import CalenderTestcopy from "./screens/CalenderTestcopy";
 const Stack = createNativeStackNavigator();
@@ -59,7 +61,7 @@ export default function App() {
     return (
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Home"
+          initialRouteName="RateEmployees"
           // initialRouteName="GetNumber"
           screenOptions={{
             headerShown: false,
@@ -79,10 +81,13 @@ export default function App() {
             component={MainRateEmployees}
           />
           <Stack.Screen name="ShowEditUser" component={ShowEditUser} />
+          <Stack.Screen name="ShowEditAdmin" component={ShowEditAdmin} />
           <Stack.Screen name="NewEditUsers" component={NewEditUsers} />
-          <Stack.Screen name="EditUser" component={EditUser} />
+          <Stack.Screen name="NewEditAdmin" component={NewEditAdmin} />
+          
           {/* <Stack.Screen name="CalenderJob" component={CalenderJob} /> */}
           <Stack.Screen name="Carouselwoods" component={Carouselwoods} />
+          <Stack.Screen name="ConfirmAccessUser" component={ConfirmAccessUser} />
           <Stack.Screen name="UserManual" component={UserManual} />
           <Stack.Screen name="UserManual2" component={UserManual2} />
           <Stack.Screen name="Home" component={Home} />

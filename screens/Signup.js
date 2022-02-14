@@ -177,19 +177,24 @@ export default class Signup extends Component {
    
     Register(this.state.userData)
       .then((res) => {
-        const file = this.state.imageUpload;
-        const uriArray = file.uri.split(".");
-        const filetype = uriArray[uriArray.length - 1];
         if (res.status === 200) {
-          console.log(res);
+          const uriArray = this.state.imageUpload.uri.split(".");
+          const filetype = uriArray[uriArray.length - 1];
           UploadImage(this.state.userData.ID_User, {
-            uri: file.uri,
+            uri: this.state.imageUpload.uri,
             name: `${Date.now()}.${filetype}`,
             type: `image/${filetype}`,
-          }).then((result) => {
-            alert("ทำการส่งคำขอไปยังผู้ดูแลพนักงานแคดดี้เรียบร้อย");
-            this.navigation.navigate("Login", {});
-          });
+          })
+          .then(async (res) => {
+            if (res.status === 200) {
+              Alert.alert("ระบบได้ทำการส่งคำขอไปยังผู้ดูแลพนักงานเรียบร้อย");
+              await AsyncStorage.setItem("user", JSON.stringify(res.data));
+              }
+            })
+            .catch((e) => {
+              this.navigation.navigate("Login");
+              // console.log(e.response);
+            });
         }
       })
       .catch((e) => {

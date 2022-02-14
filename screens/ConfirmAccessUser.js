@@ -13,14 +13,16 @@ import {
 import axios from "axios";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DaleteUser, GetUserID, UpdateUser } from "../services/user.service";
 export default function ConfirmAccessUser({ navigation }) {
   const [userData, setUserData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState({});
   const [modalVisible1, setModalVisible1] = useState(false);
-
+  const [user, setUser] = useState({});
   useEffect(() => {
+    
     ShowDataUser();
   }, []);
 
@@ -54,6 +56,7 @@ export default function ConfirmAccessUser({ navigation }) {
         ID_User: id,
         FirstName: result.data.FirstName,
         LastName: result.data.LastName,
+        Image : result.data.Image,
       });
     });
   }
@@ -207,6 +210,16 @@ export default function ConfirmAccessUser({ navigation }) {
                 <Text style={styles.modalHDText}>
                   ยืนยันสิทธิการเข้าใช้งานระบบ
                 </Text>
+                <View style={{alignItems:'center'}}>
+                  <Image
+                    style={styles.userimg}
+                    source={
+                      modalData.Image
+                      ? { uri: `${apiURL}/public/profile/${modalData.Image}` }
+                      : require("../assets/picture/user1.png")
+                    }
+                  />
+                </View>
                 <Text style={styles.modalText}>
                   รหัสประจำตัว : {modalData.ID_User}
                 </Text>
@@ -247,6 +260,7 @@ export default function ConfirmAccessUser({ navigation }) {
                 <Text style={styles.modalHDText}>
                   ยืนยันสิทธิการลบข้อมูลพนักงาน
                 </Text>
+                <View></View>
                 <Text style={styles.modalText}>
                   รหัสประจำตัว : {modalData.ID_User}
                 </Text>
@@ -331,13 +345,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#00B4DB",
     fontFamily: "MitrExtraLight",
-   
   },
   AcText: {
     fontSize: 14,
     color: "#00B4DB",
     fontFamily: "MitrExtraLight",
-  
   },
 
   DateTime: {
@@ -439,7 +451,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: 300,
-    height: 280,
+    height: 400,
   },
   buttons: {
     width: 20,
@@ -475,5 +487,14 @@ const styles = StyleSheet.create({
     height: 60,
     margin: 10,
     borderRadius: 10,
+  },
+  userimg: {
+    width: 120,
+    height: 120,
+    marginVertical: 5,
+    borderRadius: 100,
+    borderWidth: 3,
+    borderColor: "#00B4DB",
+    padding: 10,
   },
 });

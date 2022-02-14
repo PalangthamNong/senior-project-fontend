@@ -32,6 +32,7 @@ export default function NewEditUsers({ navigation }) {
   const [Phone, setPhone] = useState("");
   const [Email, setEmail] = useState("");
   const [user, setUser] = useState({});
+  const [imageUpload, setImageUpload] = useState(null);
   const fetchUser = async () => {
     setUser(JSON.parse(await AsyncStorage.getItem("user")));
     setFirstName(user.FirstName);
@@ -44,17 +45,9 @@ export default function NewEditUsers({ navigation }) {
       aspect: [4, 3],
       quality: 1,
     });
-    UploadImage("0025", result)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((e) => {
-        console.log(e.response);
-      });
-    console.log(result);
-
     if (!result.cancelled) {
       setimages(result.uri);
+      setImageUpload(result);
     }
   };
 
@@ -62,13 +55,7 @@ export default function NewEditUsers({ navigation }) {
     fetchUser();
   }, []);
 
-  function _BeforeSave() {
-    if (Password !== ConfirmPassword) {
-      Alert.alert("ไอสัสฟลุ็ค");
-      return null;
-    }
-    _Save();
-  }
+  
 
   const handleConfirm = (dates) => {
     var date = formatDate(dates);
@@ -102,11 +89,28 @@ export default function NewEditUsers({ navigation }) {
       Phone,
     })
       .then(async (result) => {
-        await AsyncStorage.setItem("user", JSON.stringify(result.data));
+        const uriArray = imageUpload.uri.split(".");
+        const filetype = uriArray[uriArray.length - 1];
+        UploadImage(user.ID_User, {
+          uri: imageUpload.uri,
+          name: `${Date.now()}.${filetype}`,
+          type: `image/${filetype}`,
+        })
+        .then(async (res) => {
+          if (res.status === 200) {
+            Alert.alert("แก้ไขข้อมูลเสร็จสิ้น");
+            await AsyncStorage.setItem("user", JSON.stringify(res.data));
+            }
+          })
+          .catch((e) => {
+            Alert.alert("เกิดข้อผิดพลาดในการแก้ไขข้อมูล");
+            // console.log(e.response);
+          });
         setUser(result.data);
-        navigation.navigate("ShowEditUser");
+        navigation.navigate("ShowEditAdmin");
       })
       .catch((e) => {
+        console.log(e);
         Alert.alert("โปรดใส่ข้อมูลอีกครั้ง");
       });
   }
@@ -364,7 +368,10 @@ export default function NewEditUsers({ navigation }) {
                 <View style={styles.modalView}>
                   <Text style={styles.modalText}>ยกเลิกการแก้ไขข้อมูล</Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Pressable style={[styles.button_ps, styles.buttonClose]}>
+                    <Pressable
+                      style={[styles.button_ps, styles.buttonClose]}
+                      onPress={() => navigation.goBack()}
+                    >
                       <Text style={styles.textStyle}>ยืนยัน</Text>
                     </Pressable>
                     <Pressable

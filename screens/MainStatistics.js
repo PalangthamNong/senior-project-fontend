@@ -57,6 +57,7 @@ export default function MainRateEmployees({ navigation }) {
   };
 
   function SearchStatistics() {
+  
     if (!date) {
       Alert.alert("เลือกวันเวลาก่อน");
       return null;
@@ -85,7 +86,7 @@ export default function MainRateEmployees({ navigation }) {
       >
         <View style={styles.Narbar}>
           <Text style={styles.Narbartext}>ระบบจัดการพนักงานแคดดี้</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Home2")} style={{width :'10%'}}>
+          <TouchableOpacity onPress={() => navigation.navigate("AdminMain")} style={{width :'10%'}}>
             <Image
               style={styles.Narbarimg}
               source={require("../assets/picture/back-button.png")}
@@ -197,9 +198,11 @@ export default function MainRateEmployees({ navigation }) {
                     width: 120,
                   }}
                 >
+                  <View style={{alignItems: 'center' }}>
                   <Text style={styles.HeaderText3}>
-                    จำนวนพนักงานที่มาปฎิบัติงาน
+                    {"จำนวนพนักงาน \n ที่มาปฎิบัติงาน"}
                   </Text>
+                  </View>
                 </View>
               </View>
 
@@ -221,9 +224,11 @@ export default function MainRateEmployees({ navigation }) {
                     width: 150,
                   }}
                 >
+                   <View style={{alignItems: 'center' }}>
                   <Text style={styles.HeaderText3}>
-                    จำนวนพนักงานที่ไม่มาปฎิบัติงาน
+                    {"   จำนวนพนักงาน  \n   ไม่มาปฎิบัติงาน"}
                   </Text>
+                  </View>
                 </View>
               </View>
             </View>

@@ -47,7 +47,7 @@ export default function ShowEditUser({ navigation }) {
               <Text style={styles.Narbartext}>ระบบจัดการพนักงานแคดดี้</Text>
             </View>
             <View>
-              <TouchableOpacity onPress={() => navigation.navigate("UserMain")}>
+              <TouchableOpacity onPress={() => navigation.navigate("AdminMain")}>
                 <Image
                   style={styles.Narbarimg}
                   source={require("../assets/picture/back-button.png")}
@@ -75,9 +75,10 @@ export default function ShowEditUser({ navigation }) {
               style={styles.userimg}
               source={
                 user.Image
-                  ? { uri: `${apiURL}/public/profile/${user.Image}` }
-                  : require("../assets/picture/user1.png")
-              }
+                ? { uri: `${apiURL}/public/profile/${user.Image}` }
+                : require("../assets/picture/user1.png")
+            }
+              
             />
             <View
               style={{
@@ -100,6 +101,7 @@ export default function ShowEditUser({ navigation }) {
                     style={{
                       flexDirection: "row",
                       width: "75%",
+                      
                     }}
                   >
                     <Text style={styles.DatauserText}>ชื่อ-นามสกุล :</Text>
@@ -111,6 +113,7 @@ export default function ShowEditUser({ navigation }) {
                     style={{
                       flexDirection: "row",
                       width: "75%",
+                      
                     }}
                   >
                     <Text style={styles.DatauserText}>เพศ :</Text>
@@ -121,6 +124,7 @@ export default function ShowEditUser({ navigation }) {
                     style={{
                       flexDirection: "row",
                       width: "75%",
+                      
                     }}
                   >
                     <Text style={styles.DatauserText}>วันเกิด :</Text>
@@ -131,6 +135,7 @@ export default function ShowEditUser({ navigation }) {
                     style={{
                       flexDirection: "row",
                       width: "75%",
+                      
                     }}
                   >
                     <Text style={styles.DatauserText}>เลขประจำตัว :</Text>
@@ -141,6 +146,7 @@ export default function ShowEditUser({ navigation }) {
                     style={{
                       flexDirection: "row",
                       width: "75%",
+                      
                     }}
                   >
                     <Text style={styles.DatauserText}>เบอร์โทรศัพท์ :</Text>
@@ -151,6 +157,7 @@ export default function ShowEditUser({ navigation }) {
                     style={{
                       flexDirection: "row",
                       width: "75%",
+                      
                     }}
                   >
                     <Text style={styles.DatauserText}>อีเมลล์ :</Text>
@@ -161,14 +168,16 @@ export default function ShowEditUser({ navigation }) {
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
-                    navigation.navigate("NewEditUsers");
+                    navigation.navigate("NewEditAdmin");
                     console.log("test");
                   }}
                 >
                   <Text style={styles.Titlebtn}>แก้ไขข้อมูลส่วนตัว</Text>
                 </TouchableOpacity>
               </View>
-              <View></View>
+              <View>
+               
+              </View>
             </View>
           </View>
         </ImageBackground>

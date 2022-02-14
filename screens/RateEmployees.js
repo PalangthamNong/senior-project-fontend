@@ -12,6 +12,7 @@ import {
 import DropDownPicker from "react-native-dropdown-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
+import { apiURL } from "../environment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AssessmentInput } from "../services/assessment.service";
 export default function RateEmployees({ navigation, route }) {
@@ -180,7 +181,11 @@ export default function RateEmployees({ navigation, route }) {
             alignItems: "center",
           }}
         >
-          <Image style={styles.userimg} source={require("../assets/277.png")} />
+          <Image
+              style={styles.userimg}
+              source={{
+                uri: `${apiURL}/public/profile/${user.Image}`
+              }} />
           <View style={{width: '100%'}}>
           <ScrollView >
             {gauage.map((item, idx) => _renderGauges(item, idx))}

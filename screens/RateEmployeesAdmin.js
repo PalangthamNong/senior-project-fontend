@@ -73,7 +73,7 @@ export default function RateEmployeesAdmin({navigation}) {
     <View style={styles.container}>
       <View style={styles.Narbar}>
         <Text style={styles.Narbartext}>ระบบจัดการพนักงานแคดดี้</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Home2")}>
+        <TouchableOpacity onPress={() => navigation.navigate("AdminMain")}>
           <Image
             style={styles.Narbarimg}
             source={require("../assets/picture/back-button.png")}

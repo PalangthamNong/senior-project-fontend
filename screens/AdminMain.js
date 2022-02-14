@@ -124,12 +124,15 @@ export default function AdminMain({ navigation }) {
   };
 
   async function _DaleteUser(id, button = false) {
+   
     let exitQueue;
+    
     if (button) {
       exitQueue = id;
     } else {
       exitQueue = ExitQueue;
     }
+    
     DaleteUser(exitQueue).then(async (result) => {
       if (result.status === 200) {
         Alert.alert("แก้ไขสำเร็จ");

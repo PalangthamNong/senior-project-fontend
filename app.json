@@ -4,14 +4,10 @@
     "slug": "senior-project-fontend",
     "version": "1.0.0",
     "orientation": "portrait",
-   
     "splash": {
       "image": "./assets/picture/LogoBule.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-      
-      
-      
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,10 +20,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.ningng.seniorprojectfontend"
     }
-    
   }
 }

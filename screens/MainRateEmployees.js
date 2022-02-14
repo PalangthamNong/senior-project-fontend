@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 import {
   Text,
   Image,
@@ -11,6 +11,7 @@ import {
   Alert,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { apiURL } from "../environment";
 import {
@@ -21,7 +22,11 @@ export default function MainRateEmployees({ navigation }) {
   const [authData, seTauthData] = useState({ Fullname: "", Phone: "" });
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-
+  const [user, setUser] = useState({});
+  const fetchUser = async () => {
+    setUser(JSON.parse(await AsyncStorage.getItem("user")));
+    console.log(user);
+  };
   // function ChangeVerifyIdentitys() {
   //   ChangeVerifyIdentity()
 
@@ -46,6 +51,9 @@ export default function MainRateEmployees({ navigation }) {
       }
     });
   }
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -60,7 +68,7 @@ export default function MainRateEmployees({ navigation }) {
               <Text style={styles.Narbartext}>ระบบจัดการพนักงานแคดดี้</Text>
             </View>
             <View style={{marginRight: 10}}>
-              <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+              <TouchableOpacity onPress={() => navigation.navigate("UserMain")}>
                 <Image
                   style={styles.Narbarimg}
                   source={require("../assets/picture/back-button.png")}
@@ -87,7 +95,10 @@ export default function MainRateEmployees({ navigation }) {
           >
             <Image
               style={styles.userimg}
-              source={require("../assets/277.png")}
+              source={{
+                uri: `${apiURL}/public/profile/${user.Image}`
+              }}
+              
             />
             <View>
               <TextInput

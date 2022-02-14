@@ -7,7 +7,7 @@ export default function Test({navigation}) {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.Narbar}>
         <Text style={styles.Narbartext}>ระบบจัดการพนักงานแคดดี้</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => navigation.navigate("UserMain")}>
           <Image
             style={styles.Narbarimg}
             source={require("../assets/picture/back-button.png")}

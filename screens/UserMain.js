@@ -308,7 +308,7 @@ export default function UserMain({ navigation }) {
                       flexDirection: "row",
                       justifyContent: "center",
                       alignItems: "center",
-                      backgroundColor: "red",
+             
                       width: "100%",
                     }}
                   >

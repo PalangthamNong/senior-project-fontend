@@ -55,13 +55,7 @@ export default function NewEditUsers({ navigation }) {
     fetchUser();
   }, []);
 
-  function _BeforeSave() {
-    if (Password !== ConfirmPassword) {
-      Alert.alert("ไอสัสฟลุ็ค");
-      return null;
-    }
-    _Save();
-  }
+  
 
   const handleConfirm = (dates) => {
     var date = formatDate(dates);
@@ -95,17 +89,17 @@ export default function NewEditUsers({ navigation }) {
       Phone,
     })
       .then(async (result) => {
-        await AsyncStorage.setItem("user", JSON.stringify(result.data));
         const uriArray = imageUpload.uri.split(".");
         const filetype = uriArray[uriArray.length - 1];
-        UploadImage("0025", {
+        UploadImage(user.ID_User, {
           uri: imageUpload.uri,
           name: `${Date.now()}.${filetype}`,
           type: `image/${filetype}`,
         })
-          .then((res) => {
-            if (res.status === 200) {
-              Alert.alert("แก้ไขข้อมูลเสร็จสิ้น");
+        .then(async (res) => {
+          if (res.status === 200) {
+            Alert.alert("แก้ไขข้อมูลเสร็จสิ้น");
+            await AsyncStorage.setItem("user", JSON.stringify(res.data));
             }
           })
           .catch((e) => {
@@ -113,7 +107,7 @@ export default function NewEditUsers({ navigation }) {
             // console.log(e.response);
           });
         setUser(result.data);
-        navigation.navigate("ShowEditUser");
+        navigation.navigate("ShowEditAdmin");
       })
       .catch((e) => {
         console.log(e);
@@ -177,8 +171,8 @@ export default function NewEditUsers({ navigation }) {
                       <Image
                         source={{ uri: images }}
                         style={{
-                          width: 100,
-                          height: 100,
+                          width: 150,
+                          height: 150,
                           borderRadius: 200,
                           borderWidth: 1,
                         }}
@@ -375,7 +369,7 @@ export default function NewEditUsers({ navigation }) {
                   <Text style={styles.modalText}>ยกเลิกการแก้ไขข้อมูล</Text>
                   <View style={{ flexDirection: "row" }}>
                     <Pressable style={[styles.button_ps, styles.buttonClose]}
-                    onPress={() => navigation.navigate("ShowEditUser")}
+                    onPress={() => navigation.goBack()}
                     >
                       <Text style={styles.textStyle}>ยืนยัน</Text>
                     </Pressable>
@@ -495,6 +489,7 @@ const styles = StyleSheet.create({
   Datauser: {
     flexDirection: "row",
     margin: 10,
+    
   },
   DatauserText: {
     fontSize: 18,

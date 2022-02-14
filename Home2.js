@@ -13,13 +13,13 @@ import MainRateEmployees from "./screens/MainRateEmployees";
 import  RateEmployeesAdmin  from "./screens/RateEmployeesAdmin";
 import  RateEmployeesAdminDetails  from "./screens/RateEmployeesAdminDetails";
 import UserManual from "./screens/test";
-import ShowEditUser from "./screens/ShowEditUser";
+import ShowEditUser from "./screens/ShowEditAdmin";
 import SearchEditUserAdmin from "./screens/SearchEditUserAdmin";
 import MainStatistics from "./screens/MainStatistics";
 import Login from "./screens/Login";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import EditUser from "./screens/EditUser";
+
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
@@ -91,7 +91,7 @@ export default function Home2() {
           ),
         }}
       />
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name="ShowEditUser"
         component={ShowEditUser}
         options={{
@@ -100,7 +100,7 @@ export default function Home2() {
             <Icon size={size} color="#00B4DB" name="edit" />
           ),
         }}
-      /> */}
+      />
      
       <Drawer.Screen
         name="RateEmployeesAdmin"
