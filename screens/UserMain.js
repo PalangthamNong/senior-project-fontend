@@ -9,7 +9,9 @@ import {
   Picker,
   Button,
   Alert,
+  Switch,
 } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { InputQueueing, ShowQueueingNow } from "../services/queue.service.js";
 import { StatisticsInput, Update } from "../services/statistics.service.js";
@@ -47,6 +49,10 @@ export default function UserMain({ navigation }) {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+  const [isShown, setIsShown] = useState(false);
+  const toggleTheBox = () => {
+    setIsShown((previousState) => !previousState);
+  };
   //required
   const ws = useRef(io(`ws://${appIP}:5000`)).current;
   //--------------------------------
@@ -104,6 +110,7 @@ export default function UserMain({ navigation }) {
           Typequeue: value,
         }).then((re) => {
           if (res.status === 200) {
+            ws.emit("notify", { ID_User: user_.ID_User });
             Alert.alert("ออกปฎิบัติงานสำเร็จ");
             Update(Number_Services, Number_Services - 1).then((result) => {
               fetchNumber_Services();
@@ -215,6 +222,7 @@ export default function UserMain({ navigation }) {
           resizeMode="contain"
           source={require("../assets/picture/Logo.png")}
         />
+        <View></View>
         <View style={styles.QueueNow}>
           <Text style={styles.NumQueueNow}>{nqueue}</Text>
           <Text style={styles.TextQueueNow}>คิวปัจจุบัน</Text>
@@ -308,11 +316,11 @@ export default function UserMain({ navigation }) {
                       flexDirection: "row",
                       justifyContent: "center",
                       alignItems: "center",
-             
+
                       width: "100%",
                     }}
                   >
-                    <View style={{width:'47%' ,alignItems:"center"}}>
+                    <View style={{ width: "47%", alignItems: "center" }}>
                       <TouchableOpacity
                         onPress={() => {
                           _DaleteUser1();
@@ -330,7 +338,7 @@ export default function UserMain({ navigation }) {
                         </Text>
                       </TouchableOpacity>
                     </View>
-                    <View style={{width:'47%',alignItems:"center"}}>
+                    <View style={{ width: "47%", alignItems: "center" }}>
                       <TouchableOpacity
                         onPress={() => _DaleteUser()}
                         style={styles.button1}

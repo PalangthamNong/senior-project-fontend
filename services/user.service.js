@@ -11,18 +11,18 @@ export async function DaleteUser(id, user) {
   return await axios.delete(`${apiURL}/confirm-rights/${id}`);
 }
 
+export async function FindUser(id) {
+  return await axios.get(`${apiURL}/find-users`, { params: {id} });
+}
+
 export async function UploadImage(id, image) {
   var formData = new FormData();
   formData.append("image", image);
-  console.log( `${apiURL}/userProfile/${id}`);
+  console.log(`${apiURL}/userProfile/${id}`);
   console.log(image);
-  return await axios.put(
-    `${apiURL}/userProfile/${id}`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  return await axios.put(`${apiURL}/userProfile/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 }

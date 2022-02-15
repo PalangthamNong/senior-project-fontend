@@ -61,7 +61,7 @@ export default function App() {
     return (
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="RateEmployees"
+          initialRouteName="Home"
           // initialRouteName="GetNumber"
           screenOptions={{
             headerShown: false,
