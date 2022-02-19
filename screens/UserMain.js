@@ -55,6 +55,7 @@ export default function UserMain({ navigation }) {
   };
   //required
   const ws = useRef(io(`ws://${appIP}:5000`)).current;
+  // const ws = useRef(io(`ws://${appIP}:5000`)).current;
   //--------------------------------
   const fetchUser = async () => {
     let data = await AsyncStorage.getItem("user");
@@ -90,27 +91,63 @@ export default function UserMain({ navigation }) {
     });
   };
 
+  function BF_DaleteUser() {
+    console.log("value",value);
+    if (value === null) {
+      Alert.alert("โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามขั้นตอนการต่อคิวปฎิบัติงาน");
+      return null ;
+    }
+    if (value === "ออกปฎิบัติงานแบบการนัดหมาย") {
+      Alert.alert("การยกเลิกผิดพลาดและต้องทำตามขั้นตอนการต่อคิวปฎิบัติงาน");
+      return null ;
+    }
+    if (value === "ออกปฎิบัติงานแบบการมอบหมายงาน") {
+      Alert.alert("การยกเลิกผิดพลาดและต้องทำตามขั้นตอนการต่อคิวปฎิบัติงาน");
+      return null ;
+    }
+    // _DaleteUser();
+  }
+
   async function _DaleteUser(id) {
     const user_ = await fetchUser();
     DaleteUser(user_.ID_User).then((res) => {
       if (res.status === 200) {
         Alert.alert("ยกเลิกสำเร็จ");
+        ws.emit("queueUpdate", {});
       } else {
         Alert.alert("ยกเลิกไม่สำเร็จ");
       }
     });
   }
+
+  function BF_DaleteUser1() {
+    console.log("value",value);
+    if (value === null) {
+      Alert.alert("โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามครั้งตอนการต่อคิวปฎิบัติงาน");
+      return null ;
+    }
+    _DaleteUser1();
+  }
+
   async function _DaleteUser1(id) {
     const user_ = await fetchUser();
+    const qtemp = [...queue];
     DaleteUser(user_.ID_User).then((res) => {
       if (res.status === 200) {
+        ws.emit("queueUpdate");
         StatisticsInput({
           Sts_ID_User: user_?.ID_User,
           Quantity: 1,
           Typequeue: value,
         }).then((re) => {
           if (res.status === 200) {
-            ws.emit("notify", { ID_User: user_.ID_User });
+            ws.emit("notify", {
+              ID_User: user_.ID_User,
+              nqueue,
+              Number_Services: Number_Services - 1,
+              allqueue: allqueue - 1,
+              qtemp
+            });
             Alert.alert("ออกปฎิบัติงานสำเร็จ");
             Update(Number_Services, Number_Services - 1).then((result) => {
               fetchNumber_Services();
@@ -127,7 +164,7 @@ export default function UserMain({ navigation }) {
   }
   async function Queueing() {
     const nuser = await fetchUser();
-
+    console.log();
     if (value == null) {
       Alert.alert("โปรดเลือกรูปแบบการออกปฎิบัติงาน");
     } else if (value == "การต่อคิวปกติ") {
@@ -138,16 +175,17 @@ export default function UserMain({ navigation }) {
         ws.emit("queueUpdate");
         fetchQueue();
         if (res.status === 200) {
-          Alert.alert("ต่อคิวสำเร็จ");
+          Alert.alert(res.data.message);
+          // Alert.alert("ต่อคิวสำเร็จ");
         } else {
           Alert.alert("เกิดการผิดพลาดในการต่อคิว");
         }
       });
       fetchQueue();
     } else if (value == "ออกปฎิบัติงานแบบการนัดหมาย") {
-      Alert.alert("ไม่สามารถการต่อคิวได้");
+      Alert.alert("โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามครั้งตอนการต่อคิวปฎิบัติงาน");
     } else if (value == "ออกปฎิบัติงานแบบการมอบหมายงาน") {
-      Alert.alert("ไม่สามารถการต่อคิวได้");
+      Alert.alert("โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามครั้งตอนการต่อคิวปฎิบัติงาน");
     }
   }
   useEffect(() => {
@@ -173,6 +211,7 @@ export default function UserMain({ navigation }) {
     ws.on("queueUpdate", (msg, e) => {
       fetchUser();
       fetchNumber_Services();
+      fetchAllQueue();
       fetchQueue();
       console.log(token);
       if (token)
@@ -232,31 +271,26 @@ export default function UserMain({ navigation }) {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
+            width: "100%",
           }}
         >
-          <View style={{ margin: 10 }}>
-            <View style={styles.QueueNow1}>
-              <Text style={styles.NumQueueBefore}>
-                {myqueue <= -1 ? 0 : myqueue}{" "}
-              </Text>
-              <Text style={styles.TextQueueBefore}>
-                จำนวนการต่อคิวก่อนหน้าคุณ
-              </Text>
-            </View>
+          <View style={{ width: "33%", alignItems: "center" }}>
+            <Text style={styles.NumQueueBefore}>
+              {myqueue <= -1 ? 0 : myqueue}{" "}
+            </Text>
+            <Text style={styles.TextQueueBefore}>
+              จำนวนการต่อคิวก่อนหน้าคุณ
+            </Text>
           </View>
-          <View style={{ margin: 10 }}>
-            <View style={styles.QueueNow}>
-              <Text style={styles.NumQueueAfter}>{allqueue}</Text>
-              <Text style={styles.TextQueueAfter}>จำนวนการต่อคิวทั้งหมด</Text>
-            </View>
+          <View style={{ width: "33%", alignItems: "center" }}>
+            <Text style={styles.NumQueueAfter}>{allqueue}</Text>
+            <Text style={styles.TextQueueAfter}>จำนวนการต่อคิวทั้งหมด</Text>
           </View>
-          <View style={{ margin: 10 }}>
-            <View style={styles.QueueNow}>
-              <Text style={styles.NumQueueAfter}>
-                {Number_Services <= -1 ? 0 : Number_Services}
-              </Text>
-              <Text style={styles.TextQueueAfter}>จำนวนนักกอล์ฟ</Text>
-            </View>
+          <View style={{ width: "33%", alignItems: "center" }}>
+            <Text style={styles.NumQueueAfter}>
+              {Number_Services <= -1 ? 0 : Number_Services}
+            </Text>
+            <Text style={styles.TextQueueAfter}>จำนวนนักกอล์ฟ</Text>
           </View>
         </View>
 
@@ -323,7 +357,7 @@ export default function UserMain({ navigation }) {
                     <View style={{ width: "47%", alignItems: "center" }}>
                       <TouchableOpacity
                         onPress={() => {
-                          _DaleteUser1();
+                          BF_DaleteUser1();
                         }}
                         style={styles.button1}
                       >
@@ -340,7 +374,7 @@ export default function UserMain({ navigation }) {
                     </View>
                     <View style={{ width: "47%", alignItems: "center" }}>
                       <TouchableOpacity
-                        onPress={() => _DaleteUser()}
+                        onPress={() => BF_DaleteUser()}
                         style={styles.button1}
                       >
                         <Text
@@ -385,6 +419,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     zIndex: 100,
+    marginTop: 20,
   },
   Hd: {
     color: "#fff",
@@ -442,6 +477,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontFamily: "MitrExtraLight",
     color: "#fff",
+    marginLeft: 15,
   },
   TextQueueBefore: {
     fontFamily: "MitrExtraLight",

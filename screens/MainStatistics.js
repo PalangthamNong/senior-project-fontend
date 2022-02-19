@@ -57,9 +57,9 @@ export default function MainRateEmployees({ navigation }) {
   };
 
   function SearchStatistics() {
-  
-    if (!date) {
-      Alert.alert("เลือกวันเวลาก่อน");
+    console.log("date",date);
+    if (date == "YYYY-MM-DD") {
+      Alert.alert("โปรดเลือกวันที่บันทึกสถิติก่อน");
       return null;
     }
     axios

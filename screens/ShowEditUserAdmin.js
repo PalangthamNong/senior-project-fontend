@@ -115,17 +115,17 @@ export default function ShowEditUser({ navigation, route }) {
                   data?.LastName
                 }`}</Text>
                 <Text style={styles.DatauserShow}>{`${
-                  data.Gender || "-"
+                  data?.Gender || "-"
                 }`}</Text>
                 <Text style={styles.DatauserShow}>{`${
-                  data.Birthdate || "-"
+                  data?.Birthdate || "-"
                 }`}</Text>
                 <Text style={styles.DatauserShow}>{`${
-                  data.ID_User || "-"
+                  data?.ID_User || "-"
                 }`}</Text>
 
                 <Text style={styles.DatauserShow}>{`${
-                  data.Email || "-"
+                  data?.Email || "-"
                 }`}</Text>
               </View>
             </View>

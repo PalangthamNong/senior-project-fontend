@@ -9,25 +9,36 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
+  Alert,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { apiURL } from "../environment";
 export default function ShowEditUser({ navigation }) {
   const [number, onChangeNumber] = React.useState(null);
+  
   function Search() {
     console.log("search:", number);
+    if (number == null) {
+      Alert.alert("ตรวจสอบข้อมูลและกรุณากรอกข้อมูลนักงานอีกครั้ง");
+      return null;
+    } 
     axios
       .get(`${apiURL}/find-users`, { params: { id: number } })
       .then((r) => {
         if (r.status === 200) {
-          navigation.navigate("ShowEditUserAdmin", {
-            data: r.data,
-          });
-        }
+          if(r.data){
+            navigation.navigate("ShowEditUserAdmin", {
+              data: r.data,
+            }); 
+          }else {
+            Alert.alert("ไม่มีพนักงานหมายเลยดังกล่าว โปรดกล่าวใหม่อีกครั้ง");
+          }
+          
+        } 
       })
       .catch((e) => {
-        console.log(e);
+        Alert.alert("กรุณากรอกข้อมูลนักงานอีกครั้ง");
       });
   }
   return (
@@ -55,7 +66,7 @@ export default function ShowEditUser({ navigation }) {
               <Text style={styles.Narbartext}>ระบบจัดการพนักงานแคดดี้</Text>
             </View>
             <View style={{  }}>
-              <TouchableOpacity onPress={() => navigation.goBack()}>
+              <TouchableOpacity onPress={() => navigation.navigate("AdminMain")}>
                 <Image
                   style={styles.Narbarimg}
                   source={require("../assets/picture/back-button.png")}

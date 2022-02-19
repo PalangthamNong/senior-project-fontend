@@ -36,6 +36,23 @@ export default function MainRateEmployees({ navigation }) {
   //   // ChangeVerifyIdentity(1,(res.data.data.)
   // }
 
+  function BeforVerifyIdentitys() {
+    console.log("authData.Fullname",authData.Fullname);
+    if (authData.Fullname === "") {
+      Alert.alert("โปรดกรอกข้อมูลชื่อต้นนักกีฬากอล์ฟ");
+      return null ;
+    }
+    if (authData.Phone === "") {
+      Alert.alert("โปรดกรอกข้อมูลเบอร์โทรศัพท์นักกีฬากอล์ฟ");
+      return null ;
+    }
+    if (!/\d$/.test(authData.Phone)  || authData.Phone.length > 10 || authData.Phone.length < 10 ) {
+      Alert.alert("โปรดตรวจสอบหมายเลขโทรสัพท์และกรอกข้อมูลใหม่อีกครั้ง");
+      return null;
+    }
+    VerifyIdentitys();
+  }
+
   function VerifyIdentitys() {
     VerifyIdentity(authData.Fullname, authData.Phone).then((res) => {
       console.log(res.data);
@@ -121,7 +138,7 @@ export default function MainRateEmployees({ navigation }) {
             <View>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => VerifyIdentitys()}
+                onPress={() => BeforVerifyIdentitys()}
               >
                 <Text style={styles.Titlebtn}>ประเมินพนักงาน</Text>
               </TouchableOpacity>

@@ -55,8 +55,6 @@ export default function NewEditUsers({ navigation }) {
     fetchUser();
   }, []);
 
-  
-
   const handleConfirm = (dates) => {
     var date = formatDate(dates);
     setStartDate(date);
@@ -80,6 +78,46 @@ export default function NewEditUsers({ navigation }) {
     return [year, month, day].join("-");
   };
 
+  function BF_Save() {
+    if(!imageUpload){
+      Alert.alert("กรุณาเลือกรูปภาพของตนเอง");
+      return null;
+    }
+    if (FirstName === "") {
+      Alert.alert("โปรดกรอกชื่อพนักงาน");
+    }
+    if (FirstName.length > 255) {
+      Alert.alert("กรอกข้อมูลชื่อเกินจำนวนที่กำหนด");
+    }
+    if (LastName.length > 255) {
+      Alert.alert("กรอกข้อมูลนามสกุลเกินจำนวนที่กำหนด");
+    }
+    if (LastName === "") {
+      Alert.alert("โปรดกรอกนามสกุลพนักงาน");
+    }
+    if (StartDate === "YYYY-MM-DD") {
+      Alert.alert("โปรดเลือกวันเดือนปีเกิด");
+    }
+    if (Phone === "") {
+      Alert.alert("กรุณากรอกหมายเลขโทรศัพท์");
+      return null;
+    }
+    if (!/\d$/.test(Phone)  || Phone.length  > 10 || Phone.length  < 10 ) {
+      Alert.alert("กรุณากรอกหมายเลขโทรศัพท์ให้ครบ 10 หลัก");
+      return null;
+    }
+
+    if (Email === "") {
+      Alert.alert("กรุณากรอกที่อยู่อีเมลล์ให้ครบทวน");
+      return null;
+    }
+    if (!/[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+/i.test(Email) ) {
+      Alert.alert("กรุณากรอกที่อยู่อีเมลล์ให้ครบทวน555555");
+      return null;
+    }
+    _Save() ;
+  }
+
   function _Save() {
     UpdateUser(user.ID_User, {
       FirstName,
@@ -96,10 +134,10 @@ export default function NewEditUsers({ navigation }) {
           name: `${Date.now()}.${filetype}`,
           type: `image/${filetype}`,
         })
-        .then(async (res) => {
-          if (res.status === 200) {
-            Alert.alert("แก้ไขข้อมูลเสร็จสิ้น");
-            await AsyncStorage.setItem("user", JSON.stringify(res.data));
+          .then(async (res) => {
+            if (res.status === 200) {
+              Alert.alert("แก้ไขข้อมูลเสร็จสิ้น");
+              await AsyncStorage.setItem("user", JSON.stringify(res.data));
             }
           })
           .catch((e) => {
@@ -342,7 +380,7 @@ export default function NewEditUsers({ navigation }) {
               visible={modalVisible1}
               onClose={setModalVisible1}
               onConfirm={() => {
-                _Save();
+                BF_Save();
               }}
               title="ยืนยันการแก้ไขข้อมูล"
             />

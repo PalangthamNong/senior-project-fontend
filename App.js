@@ -72,6 +72,7 @@ export default function App() {
           <Stack.Screen name="Main" component={Main} />
           <Stack.Screen name="Test" component={Test} />
           <Stack.Screen name="CalenderTestcopy" component={CalenderTestcopy} />
+          <Stack.Screen name="SearchEditUserAdmin" component={SearchEditUserAdmin} />
           <Stack.Screen name="Carouselwood" component={Carouselwood} />
           <Stack.Screen name="RateEmployees" component={RateEmployees} />
           <Stack.Screen name="MainStatistics" component={MainStatistics} />

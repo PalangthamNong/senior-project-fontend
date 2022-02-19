@@ -41,6 +41,20 @@ export default function AdminMain({ navigation }) {
     return JSON.parse(data);
   };
 
+  function _BeforeSave() {
+    console.log("Number_ServicesInput",Number_ServicesInput);
+    if (Number_ServicesInput == "") {
+      Alert.alert("โปรดกรอกจำนวนนักกีฬากอล์ฟ");
+      return null;
+    }
+    else if (!/\d$/.test(Number_ServicesInput) ) {
+      Alert.alert("โปรดตรวจสอบหมายเลยจำนวนนักกีฬากอล์ฟและกรอกใหม่อีกครั้ง");
+      return null;
+    }
+     _Save();
+  }
+
+
   function _Save() {
     Number_ServicesInputs({
       Number_Services: Number_ServicesInput,
@@ -122,17 +136,37 @@ export default function AdminMain({ navigation }) {
     setNQueue(queuedata[0]?.Queue_Now || 0);
     setMyQueue(q);
   };
+  function _BeforeDaleteUser() {
+    console.log("ExitQueue",ExitQueue);
+    if (ExitQueue == "") {
+      Alert.alert("โปรดกรอกหมายเลยพนักงานแคดดี้");
+      return null;
+    }
+    else if (ExitQueue.length > 5 ) {
+      Alert.alert("โปรดตรวจสอบหมายเลยพนักงานแคดดี้และกรอกใหม่อีกครั้ง");
+      return null;
+    }
+    else if (ExitQueue.length < 4 ) {
+      Alert.alert("โปรดตรวจสอบหมายเลยพนักงานแคดดี้และกรอกใหม่อีกครั้ง");
+      return null;
+    }
+    else if (!/^[0-9][0-9][0-9][0-9]$/i.test(ExitQueue)) {
+      Alert.alert("โปรดตรวจสอบหมายเลยพนักงานแคดดี้และกรอกใหม่อีกครั้ง");
+      return null;
+    }
+
+    _DaleteUser();
+  }
 
   async function _DaleteUser(id, button = false) {
-   
     let exitQueue;
-    
+
     if (button) {
       exitQueue = id;
     } else {
       exitQueue = ExitQueue;
     }
-    
+
     DaleteUser(exitQueue).then(async (result) => {
       if (result.status === 200) {
         Alert.alert("แก้ไขสำเร็จ");
@@ -183,21 +217,30 @@ export default function AdminMain({ navigation }) {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
+            width: "100%",
           }}
         >
-          <View style={{ margin: 10, marginTop: 10 }}>
-            <View style={styles.QueueNow1}>
+          <View>
+            <View
+              style={{
+                alignItems: "center",
+              }}
+            >
               <Text style={styles.NumQueueBefore}>{allqueue}</Text>
-              <Text style={styles.TextQueueBefore}>จำนวนการต่อคิวทั้งหมด</Text>
             </View>
+
+            <Text style={styles.TextQueueBefore}>จำนวนการต่อคิวทั้งหมด</Text>
           </View>
-          <View style={{ margin: 10 }}>
-            <View style={styles.QueueNow}>
-              <Text style={styles.NumQueueAfter}>
-                {Number_Services <= -1 ? 0 : Number_Services}
-              </Text>
-              <Text style={styles.TextQueueAfter}>จำนวนนักกอล์ฟ</Text>
+          <View>
+            <View
+              style={{
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.NumQueueBefore}>{allqueue}</Text>
             </View>
+
+            <Text style={styles.TextQueueBefore}>จำนวนการต่อคิวทั้งหมด</Text>
           </View>
         </View>
 
@@ -252,7 +295,6 @@ export default function AdminMain({ navigation }) {
                         style={{
                           flexDirection: "row",
                           marginTop: 20,
-                         
                         }}
                       >
                         <Text style={styles.Narbartext1}>
@@ -270,16 +312,14 @@ export default function AdminMain({ navigation }) {
                           />
                         </View>
                         <View>
-                        <Pressable onPress={() => _DaleteUser()}>
-                          <Image
-                            style={styles.Narbarimg3}
-                            source={require("../assets/picture/incorrect.png")}
-                          />
-                        </Pressable>
+                          <Pressable onPress={() => _BeforeDaleteUser()}>
+                            <Image
+                              style={styles.Narbarimg3}
+                              source={require("../assets/picture/incorrect.png")}
+                            />
+                          </Pressable>
+                        </View>
                       </View>
-                      </View>
-
-                     
                     </View>
                     <View style={{ alignItems: "center", margin: 10 }}>
                       <Text style={styles.Narbartext2}>ลำดับการต่อคิว</Text>
@@ -347,7 +387,7 @@ export default function AdminMain({ navigation }) {
               />
               <TouchableOpacity
                 onPress={() => {
-                  _Save();
+                  _BeforeSave();
                 }}
               >
                 <Image

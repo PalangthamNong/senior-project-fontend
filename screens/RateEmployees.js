@@ -25,6 +25,41 @@ export default function RateEmployees({ navigation, route }) {
   useEffect(() => {
     fetchUser();
   }, []);
+  
+  function BF_Save() {
+    console.log("Q1",gauage[0].rate);
+    
+    if (gauage[0].rate === 0 && gauage[1].rate === 0 && gauage[2].rate === 0 && gauage[3].rate === 0 && gauage[4].rate === 0 && gauage[5].rate === 0) {
+      Alert.alert("โปรดประเมินทุกด้านขั้นต่ำ 1 ดาว");
+      return null;
+    }
+    if (gauage[0].rate === 0) {
+      Alert.alert("โปรดประเมินด้านการแต่งกายขั้นต่ำ 1 ดาว");
+      return null;
+    }
+    if (gauage[1].rate === 0) {
+      Alert.alert("โปรดประเมินด้านกิริยาท่าทางขั้นต่ำ 1 ดาว");
+      return null;
+    }
+    if (gauage[2].rate === 0) {
+      Alert.alert("โปรดประเมินด้านการพูดขั้นต่ำ 1 ดาว");
+      return null;
+    }
+    if (gauage[3
+    ].rate === 0) {
+      Alert.alert("โปรดประเมินด้านการให้ข้อมูลขั้นต่ำ 1 ดาว");
+      return null;
+    }
+    if (gauage[4].rate === 0) {
+      Alert.alert("โปรดประเมินด้านการหยิบจับอุปกรณ์ขั้นต่ำ 1 ดาว");
+      return null;
+    }
+    if (gauage[5].rate === 0) {
+      Alert.alert("โปรดประเมินด้านการขับรถกอล์ฟขั้นต่ำ 1 ดาว");
+      return null;
+    }
+    _Save();
+  }
 
   function _Save() {
     // console.log(value);
@@ -43,7 +78,9 @@ export default function RateEmployees({ navigation, route }) {
       Period: value,
       Customer_id: route.params.id,
       ID_User: user.ID_User,
-    }).then(() => navigation.navigate("MainRateEmployees", {}));
+    }).then(() => {
+      Alert.alert("บันทึกข้อมูลการประเมินเสร็จสิ้น");
+      navigation.navigate("MainRateEmployees", {})});
   }
   const [gauage, setGauage] = useState([
     {
@@ -240,7 +277,7 @@ export default function RateEmployees({ navigation, route }) {
            
           </View> */}
           <View>
-            <TouchableOpacity style={styles.button} onPress={() => _Save()}>
+            <TouchableOpacity style={styles.button} onPress={() => BF_Save()}>
               <Text style={styles.Titlebtn}>บันทึกการประเมิน</Text>
             </TouchableOpacity>
           </View>

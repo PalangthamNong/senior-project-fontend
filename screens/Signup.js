@@ -142,39 +142,97 @@ export default class Signup extends Component {
     this.setState({ isDatePickerVisible: false });
   };
   _BeforeSave() {
+    if(!this.state.imageUpload){
+      Alert.alert("กรุณาเลือกรูปภาพของตนเอง");
+      return null;
+    }
     if (this.state.userData.FirstName === "") {
-      Alert.alert("กรุณากรอกข้อมูลให้ครบทวน");
+      Alert.alert("กรุณากรอกชื่อให้ครบทวน");
+      return null;
+    }
+    if (this.state.userData.FirstName.length > 255) {
+      Alert.alert("กรุณากรอกชื่อใหม่อีกครั้ง เนื่องจากมีจำนวนเกินจำกัด");
       return null;
     }
     if (this.state.userData.LastName === "") {
-      Alert.alert("กรุณากรอกข้อมูลให้ครบทวน");
+      Alert.alert("กรุณากรอกนามสกุลให้ครบทวน");
       return null;
     }
+    if (this.state.userData.LastName.length > 255) {
+      Alert.alert("กรุณากรอกนามสกุลใหม่อีกครั้ง เนื่องจากมีจำนวนเกินจำกัด");
+      return null;
+    }
+   
     if (this.state.userData.ID_User === "") {
-      Alert.alert("กรุณากรอกข้อมูลให้ครบทวน");
+      Alert.alert("กรุณากรอกข้อมูลรหัสประจำตัวให้ครบทวน");
       return null;
     }
+    if (
+      !/\d$/.test(this.state.userData.ID_User) ||
+      this.state.userData.ID_User.length > 3 ||
+      this.state.userData.ID_User.length < 4
+    ) {
+      Alert.alert(
+        "กรุณากรอกรหัสประจำตัวใหม่โดยมีเงื่อนไขคือ *** เป็นตัวเลข 4 หลัก *** "
+      );
+      return null;
+    }
+
     if (this.state.userData.Password === "") {
-      Alert.alert("กรุณากรอกข้อมูลให้ครบทวน");
+      Alert.alert("กรุณากรอกข้อมูลรหัสผ่านให้ครบทวน");
       return null;
     }
+    if (this.state.userData.Password.length > 255) {
+      Alert.alert("กรอกข้อมูลรหัสผ่านมากเกินกำหนดกรุณากรอกใหม่อีกครั้ง");
+      return null;
+    }
+    if (this.state.userData.Gender === "") {
+      Alert.alert("กรุณาเลือกเพศ");
+      return null;
+    }
+    if (this.state.startDate === "DD/MM/YYYY") {
+      Alert.alert("กรุณาเลือกวันเดือนปีเกิด");
+      return null;
+    }
+    if (this.state.userData.Phone === "") {
+      Alert.alert("กรุณากรอกหมายเลขโทรศัพท์");
+      return null;
+    }
+
+    if (!/\d$/.test(this.state.userData.Phone)  || this.state.userData.Phone.length  > 10 || this.state.userData.Phone.length  < 10 ) {
+      Alert.alert("กรุณากรอกหมายเลขโทรศัพท์ให้ครบ 10 หลัก");
+      return null;
+    }
+
     if (this.state.userData.Email === "") {
-      Alert.alert("กรุณากรอกข้อมูลให้ครบทวน");
+      Alert.alert("กรุณากรอกที่อยู่อีเมลล์ให้ครบทวน");
+      return null;
+    }
+    if (!/[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+/i.test(this.state.userData.Email) ) {
+      Alert.alert("กรุณากรอกที่อยู่อีเมลล์ให้ครบทวน555555");
       return null;
     }
     if (this.state.userData.Address === "") {
-      Alert.alert("กรุณากรอกข้อมูลให้ครบทวน");
+      Alert.alert("กรุณากรอกข้อมูลที่อยู่ให้ครบทวน");
+      return null;
+    }
+    if (this.state.userData.Address.length > 255) {
+      Alert.alert("กรุณากรอกข้อมูลที่อยู่เกินที่กำหนดไว้");
       return null;
     }
     if (this.state.userData.Password !== this.state.userData.ConfirmPassword) {
       Alert.alert("โปรดกรอกรหัสผ่านให้ตรงกัน");
       return null;
     }
-    this._Save();
+    if (this.state.userData.pickImage) {
+      Alert.alert("กรุณากรอกข้อมูลที่อยู่เกินที่กำหนดไว้");
+      return null;
+    }
+    // this._Save();
   }
   _Save() {
     // Alert.alert("ดีใจด้วยน้า กรอกครบสักทีไอสัส");
-   
+
     Register(this.state.userData)
       .then((res) => {
         if (res.status === 200) {
@@ -185,10 +243,10 @@ export default class Signup extends Component {
             name: `${Date.now()}.${filetype}`,
             type: `image/${filetype}`,
           })
-          .then(async (res) => {
-            if (res.status === 200) {
-              Alert.alert("ระบบได้ทำการส่งคำขอไปยังผู้ดูแลพนักงานเรียบร้อย");
-              await AsyncStorage.setItem("user", JSON.stringify(res.data));
+            .then(async (res) => {
+              if (res.status === 200) {
+                Alert.alert("ระบบได้ทำการส่งคำขอไปยังผู้ดูแลพนักงานเรียบร้อย");
+                await AsyncStorage.setItem("user", JSON.stringify(res.data));
               }
             })
             .catch((e) => {

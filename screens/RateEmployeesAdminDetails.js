@@ -26,6 +26,7 @@ export default function RateEmployeesAdminDetails({ navigation, route }) {
   const [Radio, setRadio] = useState("");
   const [TimeJob, setTimeJob] = useState("");
   const [Details, setDetails] = useState("");
+  const [DateNow, setDateNow] = useState("");
 
   console.log(route);
   useEffect(() => {
@@ -69,17 +70,65 @@ export default function RateEmployeesAdminDetails({ navigation, route }) {
         }
       });
   }
-  function ShowDataAssessmentDetails({
-    ID_User,
-    FullName,
-    total_score,
-    Q1,
-    Q2,
-    Q3,
-    Q4,
-    Q5,
-    Q6,
-  }) {}
+  function _BeforeSave() {
+    console.log("Radio", Radio);
+    console.log("TimeJob", TimeJob);
+    console.log("StartDate", StartDate);
+    console.log("Details", Details);
+
+    const [hour, minute] = TimeJob.split(".");
+    const hours = parseInt(hour);
+    const minutes = parseInt(minute);
+
+    console.log("minutes", typeof minutes);
+    if (StartDate == "YYYY-MM-DD") {
+      Alert.alert("โปรดเลือกวันที่มีการมอบหมายงาน");
+      return null;
+    } else if (Radio == "") {
+      Alert.alert("โปรดเลือกช่วงเวลาที่มีการมอบหมายงาน");
+      return null;
+    } else if (TimeJob == "") {
+      Alert.alert("โปรดกรอกเวลาที่มีการมอบหมายงาน");
+      return null;
+    } else if (TimeJob.length > 5) {
+      Alert.alert("โปรดกรอกเวลาตามรูปแบบดังนี้ 00.00");
+      return null;
+    } else if (TimeJob.length < 4) {
+      Alert.alert("โปรดกรอกเวลาตามรูปแบบดังนี้ 00.00");
+      return null;
+    } else if (Details.length > 255) {
+      Alert.alert("กรอกข้อมูลเกินที่กำหนดไว้โปรดกรอกใหม่อีกครั้ง");
+      return null;
+    } else if (!/^[0-9][0-9]\.[0-9][0-9]$/i.test(TimeJob)) {
+      Alert.alert("โปรดกรอกเวลาตามรูปแบบดังนี้ 00.00");
+      return null;
+    } else if (
+      (Radio == "เช้า" && hours > 9) ||
+      (Radio == "เช้า" && minutes > 60)
+    ) {
+      Alert.alert("กรอกเวลาตามช่วงเวลาระหว่าง 05.00 ถึง 09.59");
+      return null;
+    } else if (
+      (Radio == "เช้า" && hour < 5) ||
+      (Radio == "เช้า" && minutes > 60)
+    ) {
+      Alert.alert("กรอกเวลาตามช่วงเวลาระหว่าง 05.00 ถึง 09.59");
+      return null;
+    } else if (
+      (Radio == "บ่าย" && hours > 14) ||
+      (Radio == "บ่าย" && minutes > 60)
+    ) {
+      Alert.alert("กรอกเวลาตามช่วงเวลาระหว่าง 10.00 ถึง 14.00");
+      return null;
+    } else if (
+      (Radio == "บ่าย" && hour < 10) ||
+      (Radio == "บ่าย" && minutes > 60)
+    ) {
+      Alert.alert("กรอกเวลาตามช่วงเวลาระหว่าง 10.00 ถึง 14.00");
+      return null;
+    }
+    _Save();
+  }
 
   function _Save() {
     AssigntasksInput({
@@ -91,6 +140,7 @@ export default function RateEmployeesAdminDetails({ navigation, route }) {
     })
       .then(async (result) => {
         navigation.navigate("RateEmployeesAdmin");
+        Alert.alert("มอบหมายงานเสร็จสิ้น");
       })
       .catch((e) => {
         console.log(e);
@@ -261,7 +311,7 @@ export default function RateEmployeesAdminDetails({ navigation, route }) {
                             </Text>
                             <Text style={styles.DateText5}>ช่วงเวลา : </Text>
                             <Text style={styles.DateText5}>เวลา : </Text>
-                            <Text style={styles.DateText5}>รายละเอียด  </Text>
+                            <Text style={styles.DateText5}>รายละเอียด </Text>
                           </View>
                           <View
                             style={{
@@ -327,9 +377,7 @@ export default function RateEmployeesAdminDetails({ navigation, route }) {
                                 buttonOuterSize={30}
                               />
                             </View>
-                            <View>
-                              
-                            </View>
+                            <View></View>
                             <TextInput
                               style={styles.input}
                               placeholderTextColor="#00B4DB"
@@ -340,20 +388,19 @@ export default function RateEmployeesAdminDetails({ navigation, route }) {
                             />
                           </View>
                         </View>
-                        <View style={{alignItems:'center'}}>
-                        <TextInput
-                          style={styles.input2}
-                          placeholderTextColor="#00B4DB"
-                          placeholder=""
-                          onChangeText={(text) => set}
-                          value={Details}
-                          onChangeText={(text) => setDetails(text)}
-                          multiline
-                          numberOfLines={4}
-                          textAlignVertical="center"
-                        />
+                        <View style={{ alignItems: "center" }}>
+                          <TextInput
+                            style={styles.input2}
+                            placeholderTextColor="#00B4DB"
+                            placeholder=""
+                            onChangeText={(text) => set}
+                            value={Details}
+                            onChangeText={(text) => setDetails(text)}
+                            multiline
+                            numberOfLines={4}
+                            textAlignVertical="center"
+                          />
                         </View>
-                      
                       </View>
 
                       <View
@@ -367,7 +414,10 @@ export default function RateEmployeesAdminDetails({ navigation, route }) {
                           <Pressable
                             style={[styles.button, styles.buttonClose]}
                             onPress={() =>
-                              _Save(route.params.ID_User.ID_User, route.params)
+                              _BeforeSave(
+                                route.params.ID_User.ID_User,
+                                route.params
+                              )
                             }
                           >
                             <Text style={styles.textStyle}>ตกลง</Text>
@@ -480,7 +530,7 @@ const styles = StyleSheet.create({
     color: "#00B4DB",
     fontFamily: "MitrExtraLight",
     marginVertical: 10,
-    marginLeft: 15
+    marginLeft: 15,
   },
   DateText4: {
     fontSize: 20,
@@ -518,7 +568,7 @@ const styles = StyleSheet.create({
     borderColor: "#00B4DB",
     marginVertical: 10,
     backgroundColor: "transparent",
-    margin: 10
+    margin: 10,
   },
   txtbutton: {
     alignItems: "center",
@@ -551,8 +601,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: '90%',
-    height: 480
+    width: "90%",
+    height: 480,
   },
   buttonOpen: {
     backgroundColor: "transparent",
@@ -567,7 +617,7 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
+    textAlign: "center",
   },
   input: {
     height: 23,
@@ -589,7 +639,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "MitrExtraLight",
     marginTop: 10,
-    
   },
   textStyle: {
     fontFamily: "MitrExtraLight",
