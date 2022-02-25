@@ -10,6 +10,9 @@ import {
   Button,
   Alert,
   Switch,
+  Modal,
+  Pressable,
+  ScrollView,
 } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -39,6 +42,8 @@ Notifications.setNotificationHandler({
 export default function UserMain({ navigation }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [dataqueue, setdataqueue] = useState([]);
   const [user, setUser] = useState();
   const [Number_Services, setNumber_Services] = useState();
   const [queue, setQueue] = useState([]);
@@ -91,21 +96,61 @@ export default function UserMain({ navigation }) {
     });
   };
 
+  function Showdataqueue(item, index) {
+    return (
+      <View
+        key={index}
+        style={{
+          flexDirection: "row",
+          width: 335,
+          margin: 5,
+          width: "100%"
+         
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "column",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              width: "100%"
+            }}
+          >
+            <Text style={styles.Narbartext3}>
+              คิวที่ {index + 1} {item.Queue_Now} {item.user.FirstName}{" "}
+              {item.user.LastName}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.Narbartext3}></Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
   function BF_DaleteUser() {
-    console.log("value",value);
+    console.log("value", value);
     if (value === null) {
-      Alert.alert("โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามขั้นตอนการต่อคิวปฎิบัติงาน");
-      return null ;
+      Alert.alert(
+        "โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามขั้นตอนการต่อคิวปฎิบัติงาน"
+      );
+      return null;
     }
     if (value === "ออกปฎิบัติงานแบบการนัดหมาย") {
       Alert.alert("การยกเลิกผิดพลาดและต้องทำตามขั้นตอนการต่อคิวปฎิบัติงาน");
-      return null ;
+      return null;
     }
     if (value === "ออกปฎิบัติงานแบบการมอบหมายงาน") {
       Alert.alert("การยกเลิกผิดพลาดและต้องทำตามขั้นตอนการต่อคิวปฎิบัติงาน");
-      return null ;
+      return null;
     }
-    // _DaleteUser();
+    _DaleteUser();
   }
 
   async function _DaleteUser(id) {
@@ -121,10 +166,12 @@ export default function UserMain({ navigation }) {
   }
 
   function BF_DaleteUser1() {
-    console.log("value",value);
+    console.log("value", value);
     if (value === null) {
-      Alert.alert("โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามครั้งตอนการต่อคิวปฎิบัติงาน");
-      return null ;
+      Alert.alert(
+        "โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามครั้งตอนการต่อคิวปฎิบัติงาน"
+      );
+      return null;
     }
     _DaleteUser1();
   }
@@ -146,7 +193,7 @@ export default function UserMain({ navigation }) {
               nqueue,
               Number_Services: Number_Services - 1,
               allqueue: allqueue - 1,
-              qtemp
+              qtemp,
             });
             Alert.alert("ออกปฎิบัติงานสำเร็จ");
             Update(Number_Services, Number_Services - 1).then((result) => {
@@ -183,15 +230,27 @@ export default function UserMain({ navigation }) {
       });
       fetchQueue();
     } else if (value == "ออกปฎิบัติงานแบบการนัดหมาย") {
-      Alert.alert("โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามครั้งตอนการต่อคิวปฎิบัติงาน");
+      Alert.alert(
+        "โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามครั้งตอนการต่อคิวปฎิบัติงาน"
+      );
     } else if (value == "ออกปฎิบัติงานแบบการมอบหมายงาน") {
-      Alert.alert("โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามครั้งตอนการต่อคิวปฎิบัติงาน");
+      Alert.alert(
+        "โปรดเลือกรูปแบบการออกปฎิบัติงานและทำตามครั้งตอนการต่อคิวปฎิบัติงาน"
+      );
     }
   }
   useEffect(() => {
     fetchUser();
     fetchNumber_Services();
     fetchQueue();
+    ShowQueueingNow().then(async ({ data }) => {
+      setQueue(data);
+      console.log(data);
+      setdataqueue(data);
+      const user_ = await fetchUser();
+      setallqueue(data.length);
+      getQueue(data, user_?.ID_User);
+    });
     registerForPushNotificationsAsync()
       .then((token) => setToken(token))
       .catch((e) => console.log(e));
@@ -295,34 +354,64 @@ export default function UserMain({ navigation }) {
         </View>
 
         <View style={styles.DropDown}>
-          <View style={{ width: "85%" }}>
-            <DropDownPicker
-              open={open}
-              value={value}
-              items={[
-                { label: "การต่อคิวปกติ", value: "การต่อคิวปกติ" },
-                {
-                  label: "ออกปฎิบัติงานแบบการนัดหมาย",
-                  value: "ออกปฎิบัติงานแบบการนัดหมาย",
-                },
-                {
-                  label: "ออกปฎิบัติงานแบบการมอบหมายงาน",
-                  value: "ออกปฎิบัติงานแบบการมอบหมายงาน",
-                },
-              ]}
-              dropDownContainerStyle={{ borderWidth: 0 }}
-              style={{ borderWidth: 0 }}
-              selectedItemLabelStyle={{
-                fontFamily: "MitrExtraLight",
-                color: "#00B4DB",
+          <View style={{ width: "100%" }}>
+            <View
+              style={{
+                width: "90%",
+                alignItems: "center",
               }}
-              placeholder="รูปแบบการออกปฎิบัติงาน"
-              placeholderStyle={{ color: "#00B4DB" }}
-              labelStyle={{ color: "#00B4DB" }}
-              listItemLabelStyle={{ color: "#00B4DB" }}
-              setOpen={setOpen}
-              setValue={setValue}
-            />
+            >
+              <View
+                style={{
+                  width: "90%",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <DropDownPicker
+                  open={open}
+                  value={value}
+                  items={[
+                    { label: "การต่อคิวปกติ", value: "การต่อคิวปกติ" },
+                    {
+                      label: "ออกปฎิบัติงานแบบการนัดหมาย",
+                      value: "ออกปฎิบัติงานแบบการนัดหมาย",
+                    },
+                    {
+                      label: "ออกปฎิบัติงานแบบการมอบหมายงาน",
+                      value: "ออกปฎิบัติงานแบบการมอบหมายงาน",
+                    },
+                  ]}
+                  dropDownContainerStyle={{ borderWidth: 0 }}
+                  style={{ borderWidth: 0 }}
+                  selectedItemLabelStyle={{
+                    fontFamily: "MitrExtraLight",
+                    color: "#00B4DB",
+                  }}
+                  placeholder="รูปแบบการออกปฎิบัติงาน"
+                  placeholderStyle={{ color: "#00B4DB" }}
+                  labelStyle={{ color: "#00B4DB" }}
+                  listItemLabelStyle={{ color: "#00B4DB" }}
+                  setOpen={setOpen}
+                  setValue={setValue}
+                />
+
+                <View
+                  style={{
+                    width: "15%",
+                    alignItems: "center",
+                  }}
+                >
+                  <TouchableOpacity onPress={() => setModalVisible(true)}>
+                    <Image
+                      style={styles.Narbarimg}
+                      source={require("../assets/picture/info.png")}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
             <View style={{ width: "100%" }}>
               <View>
                 <TouchableOpacity
@@ -393,21 +482,83 @@ export default function UserMain({ navigation }) {
               </View>
             </View>
           </View>
+          <View></View>
         </View>
 
         <View
           style={{
             flexDirection: "row",
             justifyContent: "flex-end",
-            marginRight: 15,
+            width: "100%",
+            marginVertical: 20,
           }}
         >
-          <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-            <Image
-              style={styles.Sitebar}
-              source={require("../assets/menu.png")}
-            />
-          </TouchableOpacity>
+          <View
+            style={{
+              width: "90%",
+            }}
+          ></View>
+          <View
+            style={{
+              width: "15%",
+            }}
+          >
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+              <Image
+                style={styles.Sitebar}
+                source={require("../assets/menu.png")}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View>
+            <View style={styles.centeredView}>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  Alert.alert("Modal has been closed.");
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <Text style={styles.Narbartext1}>ข้อมูลการต่อคิวออก</Text>
+                    <View>
+                      <View style={{ alignItems: "center" }}></View>
+                      <View style={{ alignItems: "center", margin: 10 }}>
+                        <Text style={styles.Narbartext2}>ลำดับการต่อคิว</Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          borderWidth: 1,
+                          margin: 5,
+                          borderColor: "#00B4DB",
+                          width: "90%",
+                        }}
+                      >
+                        <ScrollView style={{ height: 100 }}>
+                          {dataqueue.map(Showdataqueue)}
+                        </ScrollView>
+                      </View>
+                    </View>
+                    <View style={{ flexDirection: "row", marginTop: 20 }}>
+                      <View style={{ marginHorizontal: 35 }}>
+                        <TouchableOpacity
+                          style={styles.button12}
+                          onPress={() => setModalVisible(!modalVisible)}
+                        >
+                          <Text style={styles.Titlebtn1}>เสร็จสิ้น</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </Modal>
+            </View>
+          </View>
         </View>
       </ImageBackground>
     </SafeAreaView>
@@ -515,5 +666,75 @@ const styles = StyleSheet.create({
   Sitebar: {
     width: 50,
     height: 50,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: "80%",
+  },
+  button_dt: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  Narbartext1: {
+    fontSize: 19,
+    fontFamily: "MitrExtraLight",
+    color: "#00B4DB",
+  },
+  Narbartext3: {
+    fontSize: 16,
+    fontFamily: "MitrExtraLight",
+    color: "#00B4DB",
+  },
+  Narbartext2: {
+    fontSize: 19,
+    fontFamily: "MitrExtraLight",
+    color: "#00B4DB",
+  },
+  button12: {
+    alignItems: "center",
+    backgroundColor: "#00B4DB",
+    padding: 15,
+    borderRadius: 10,
+    width: 150,
+    height: 50,
+  },
+  Titlebtn1: {
+    fontSize: 16,
+    color: "#fff",
+    fontFamily: "MitrExtraLight",
   },
 });

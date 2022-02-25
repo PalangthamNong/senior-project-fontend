@@ -15,11 +15,12 @@ import { AntDesign } from "@expo/vector-icons";
 import { apiURL } from "../environment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AssessmentInput } from "../services/assessment.service";
+import { Update } from "../services/statistics.service";
 export default function RateEmployees({ navigation, route }) {
   const [user, setUser] = useState({});
   const fetchUser = async () => {
     setUser(JSON.parse(await AsyncStorage.getItem("user")));
-    console.log(route);
+   
   };
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export default function RateEmployees({ navigation, route }) {
   }, []);
   
   function BF_Save() {
-    console.log("Q1",gauage[0].rate);
+  
     
     if (gauage[0].rate === 0 && gauage[1].rate === 0 && gauage[2].rate === 0 && gauage[3].rate === 0 && gauage[4].rate === 0 && gauage[5].rate === 0) {
       Alert.alert("โปรดประเมินทุกด้านขั้นต่ำ 1 ดาว");
@@ -67,6 +68,7 @@ export default function RateEmployees({ navigation, route }) {
     //   Alert.alert("กรุณาเลือกช่วงเวลา");
     //   return null;
     // }
+    
     AssessmentInput({
       Q1: gauage[0].rate,
       Q2: gauage[1].rate,
@@ -80,7 +82,7 @@ export default function RateEmployees({ navigation, route }) {
       ID_User: user.ID_User,
     }).then(() => {
       Alert.alert("บันทึกข้อมูลการประเมินเสร็จสิ้น");
-      navigation.navigate("MainRateEmployees", {})});
+      navigation.goBack()});
   }
   const [gauage, setGauage] = useState([
     {
@@ -220,9 +222,11 @@ export default function RateEmployees({ navigation, route }) {
         >
           <Image
               style={styles.userimg}
-              source={{
-                uri: `${apiURL}/public/profile/${user.Image}`
-              }} />
+              source={
+                user.Image
+                  ? { uri: `${apiURL}/public/profile/${user.Image}` }
+                  : require("../assets/picture/user1.png")
+              } />
           <View style={{width: '100%'}}>
           <ScrollView >
             {gauage.map((item, idx) => _renderGauges(item, idx))}

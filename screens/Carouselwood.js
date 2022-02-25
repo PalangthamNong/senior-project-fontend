@@ -356,7 +356,7 @@ export default function Carouselwood({navigation}) {
         <ScrollView>
           <View style={styles.Narbar}>
             <Text style={styles.Narbartext}>ระบบจัดการพนักงานแคดดี้</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Test")}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Image
                 style={styles.Narbarimg}
                 source={require("../assets/picture/back-button.png")}

@@ -111,7 +111,7 @@ export default function NewEditUsers({ navigation }) {
       Alert.alert("กรุณากรอกที่อยู่อีเมลล์ให้ครบทวน");
       return null;
     }
-    if (!/[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+/i.test(Email) ) {
+    if (!/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i.test(Email) ) {
       Alert.alert("กรุณากรอกที่อยู่อีเมลล์ให้ครบทวน555555");
       return null;
     }
@@ -145,7 +145,7 @@ export default function NewEditUsers({ navigation }) {
             // console.log(e.response);
           });
         setUser(result.data);
-        navigation.navigate("ShowEditAdmin");
+        navigation.goBack();
       })
       .catch((e) => {
         console.log(e);

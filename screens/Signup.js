@@ -147,7 +147,7 @@ export default class Signup extends Component {
       return null;
     }
     if (this.state.userData.FirstName === "") {
-      Alert.alert("กรุณากรอกชื่อให้ครบทวน");
+      Alert.alert("กรุณากรอกชื่อให้ครบถ้วน");
       return null;
     }
     if (this.state.userData.FirstName.length > 255) {
@@ -155,7 +155,7 @@ export default class Signup extends Component {
       return null;
     }
     if (this.state.userData.LastName === "") {
-      Alert.alert("กรุณากรอกนามสกุลให้ครบทวน");
+      Alert.alert("กรุณากรอกนามสกุลให้ครบถ้วน");
       return null;
     }
     if (this.state.userData.LastName.length > 255) {
@@ -164,12 +164,13 @@ export default class Signup extends Component {
     }
    
     if (this.state.userData.ID_User === "") {
-      Alert.alert("กรุณากรอกข้อมูลรหัสประจำตัวให้ครบทวน");
+      Alert.alert("กรุณากรอกข้อมูลรหัสประจำตัวให้ครบถ้วน");
       return null;
     }
+    console.log("this.state.userData.ID_User",this.state.userData.ID_User.length);
     if (
       !/\d$/.test(this.state.userData.ID_User) ||
-      this.state.userData.ID_User.length > 3 ||
+      this.state.userData.ID_User.length > 4 ||
       this.state.userData.ID_User.length < 4
     ) {
       Alert.alert(
@@ -179,7 +180,11 @@ export default class Signup extends Component {
     }
 
     if (this.state.userData.Password === "") {
-      Alert.alert("กรุณากรอกข้อมูลรหัสผ่านให้ครบทวน");
+      Alert.alert("กรุณากรอกข้อมูลรหัสผ่านให้ครบถ้วน");
+      return null;
+    }
+    if (this.state.userData.ConfirmPassword === "") {
+      Alert.alert("กรุณากรอกข้อมูลยืนยันรหัสผ่านให้ครบถ้วน");
       return null;
     }
     if (this.state.userData.Password.length > 255) {
@@ -205,15 +210,20 @@ export default class Signup extends Component {
     }
 
     if (this.state.userData.Email === "") {
-      Alert.alert("กรุณากรอกที่อยู่อีเมลล์ให้ครบทวน");
+      Alert.alert("กรุณากรอกที่อยู่อีเมลล์ให้ครบถ้วน");
       return null;
     }
-    if (!/[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+/i.test(this.state.userData.Email) ) {
-      Alert.alert("กรุณากรอกที่อยู่อีเมลล์ให้ครบทวน555555");
+    if (this.state.userData.Email > 255) {
+      Alert.alert("กรุณากรอกที่อยู่อีเมลล์ใหม่อีกครั้ง เนื่องจากมีจำนวนเกินจำกัด");
+      return null;
+    }
+    console.log("this.state.userData.Email",this.state.userData.Email);
+    if (!/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i.test(this.state.userData.Email) ) {
+      Alert.alert("กรุณากรอกที่อยู่อีเมลล์ให้ครบถ้วน");
       return null;
     }
     if (this.state.userData.Address === "") {
-      Alert.alert("กรุณากรอกข้อมูลที่อยู่ให้ครบทวน");
+      Alert.alert("กรุณากรอกข้อมูลที่อยู่ให้ครบถ้วน");
       return null;
     }
     if (this.state.userData.Address.length > 255) {
@@ -228,7 +238,7 @@ export default class Signup extends Component {
       Alert.alert("กรุณากรอกข้อมูลที่อยู่เกินที่กำหนดไว้");
       return null;
     }
-    // this._Save();
+    this._Save();
   }
   _Save() {
     // Alert.alert("ดีใจด้วยน้า กรอกครบสักทีไอสัส");

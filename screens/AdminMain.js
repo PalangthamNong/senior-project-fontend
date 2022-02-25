@@ -136,6 +136,7 @@ export default function AdminMain({ navigation }) {
     setNQueue(queuedata[0]?.Queue_Now || 0);
     setMyQueue(q);
   };
+  
   function _BeforeDaleteUser() {
     console.log("ExitQueue",ExitQueue);
     if (ExitQueue == "") {
@@ -223,7 +224,7 @@ export default function AdminMain({ navigation }) {
           <View>
             <View
               style={{
-                alignItems: "center",
+                alignItems: "center", marginHorizontal: 20
               }}
             >
               <Text style={styles.NumQueueBefore}>{allqueue}</Text>
@@ -231,17 +232,15 @@ export default function AdminMain({ navigation }) {
 
             <Text style={styles.TextQueueBefore}>จำนวนการต่อคิวทั้งหมด</Text>
           </View>
-          <View>
-            <View
-              style={{
-                alignItems: "center",
-              }}
-            >
-              <Text style={styles.NumQueueBefore}>{allqueue}</Text>
-            </View>
-
-            <Text style={styles.TextQueueBefore}>จำนวนการต่อคิวทั้งหมด</Text>
+        
+         <View>
+         <View style={{  alignItems: "center", marginHorizontal: 20 }}>
+            <Text style={styles.NumQueueAfter}>
+              {Number_Services <= -1 ? 0 : Number_Services}
+            </Text>
+            <Text style={styles.TextQueueAfter}>จำนวนนักกอล์ฟ</Text>
           </View>
+         </View>
         </View>
 
         {/* <View style={styles.DropDown}>
@@ -277,6 +276,7 @@ export default function AdminMain({ navigation }) {
         </View> */}
         <View>
           <View style={styles.centeredView}>
+
             <Modal
               animationType="slide"
               transparent={true}
@@ -350,6 +350,7 @@ export default function AdminMain({ navigation }) {
                 </View>
               </View>
             </Modal>
+
             <Pressable
               style={[styles.button, styles.buttonOpen]}
               onPress={() => setModalVisible(true)}
@@ -406,6 +407,7 @@ export default function AdminMain({ navigation }) {
               />
             </TouchableOpacity>
           </View>
+
         </View>
       </ImageBackground>
     </SafeAreaView>

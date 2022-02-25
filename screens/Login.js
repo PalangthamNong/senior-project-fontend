@@ -10,6 +10,7 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -59,20 +60,42 @@ export default function Login({ navigation }) {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
-  useEffect(() => {
-    console.log(authData);
-  }, [authData]);
+
+  function bf_login() {
+    if (!authData.password && !authData.id) {
+      Alert.alert("โปรดกรอกรหัสประจำตัวและรหัสผ่าน");
+      return null;
+    }
+    if (!authData.id) {
+      Alert.alert("โปรดกรอกรหัสประจำตัว");
+      return null;
+    }
+    if (!authData.password) {
+      Alert.alert("โปรดกรอกรหัสผ่าน");
+      return null;
+    }
+
+    login();
+  }
+
   function login() {
+    
     LoginAuth(authData.id, authData.password)
+   
       .then((r) => {
         if (r.status === 200) {
+          console.log(r.status);
+          if(r.data?.error) {
+          alert("โปรดกรอกข้อมูลใหม่อีกครั้งและติดต่อผู้ดูแลพนักงาน");
+        }
           if (r.data?.data?.StatusPass == 1) {
             if (r.data?.data?.Posittions_ID == 0) {
-              UpdateUser(r.data.data.ID_User, {token:expoPushToken}).then((result) => 
-              {
-                AsyncStorage.setItem("user", JSON.stringify(r.data.data));
-                navigation.navigate("Home");
-              });
+              UpdateUser(r.data.data.ID_User, { token: expoPushToken }).then(
+                (result) => {
+                  AsyncStorage.setItem("user", JSON.stringify(r.data.data));
+                  navigation.navigate("Home");
+                }
+              );
             }
             if (r.data?.data?.Posittions_ID == 1) {
               AsyncStorage.setItem("user", JSON.stringify(r.data.data));
@@ -87,14 +110,15 @@ export default function Login({ navigation }) {
           if (r.data?.data?.ID_User == "Admin") {
             AsyncStorage.setItem("user", JSON.stringify(r.data.data));
             navigation.navigate("Home2");
-          } else {
-            // navigation.navigate("UserMain");
-            // alert("เกิดข้อผิดพลาดโปรดกรอกข้อมูลใหม่อีกครั้ง");
-          }
+          } 
+         
         }
+        
       })
       .catch((e) => {
         console.log(e);
+        Alert.alert("โปรดกรอกข้อมูลใหม่อีกครั้งและติดต่อผู้ดูแลพนักงาน");
+        
       });
   }
   async function registerForPushNotificationsAsync() {
@@ -155,7 +179,7 @@ export default function Login({ navigation }) {
             placeholder="รหัสผ่าน"
             secureTextEntry={true}
           />
-          <TouchableOpacity style={styles.button} onPress={() => login()}>
+          <TouchableOpacity style={styles.button} onPress={() => bf_login()}>
             <Text style={styles.Titlebtn}>เข้าสู่ระบบ</Text>
           </TouchableOpacity>
           {/* <TouchableOpacity

@@ -27,14 +27,17 @@ export default function MainRateEmployees({ navigation }) {
     setUser(JSON.parse(await AsyncStorage.getItem("user")));
     console.log(user);
   };
-  // function ChangeVerifyIdentitys() {
-  //   ChangeVerifyIdentity()
+  function ChangeVerifyIdentitys(l) {
+    ChangeVerifyIdentity(l).then(()=>{
+      navigation.navigate("RateEmployees", { id: l });
 
-  // }
+    }
 
-  // function ChangeVerifyIdentitys() {
-  //   // ChangeVerifyIdentity(1,(res.data.data.)
-  // }
+    )
+
+  }
+
+
 
   function BeforVerifyIdentitys() {
     console.log("authData.Fullname",authData.Fullname);
@@ -63,8 +66,8 @@ export default function MainRateEmployees({ navigation }) {
         Alert.alert("รายชื่อนี้ทำการประเมินไปแล้ว");
       }
       if (res.data.data.Check_Pass == 0) {
-        // ChangeVerifyIdentitys()
-        navigation.navigate("RateEmployees", { id: res.data.data.Customer_id });
+        ChangeVerifyIdentitys(res.data.data.Customer_id)
+        
       }
     });
   }
@@ -112,9 +115,11 @@ export default function MainRateEmployees({ navigation }) {
           >
             <Image
               style={styles.userimg}
-              source={{
-                uri: `${apiURL}/public/profile/${user.Image}`
-              }}
+              source={
+                user.Image
+                  ? { uri: `${apiURL}/public/profile/${user.Image}` }
+                  : require("../assets/picture/user1.png")
+              }
               
             />
             <View>

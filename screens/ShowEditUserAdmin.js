@@ -41,25 +41,25 @@ export default function ShowEditUser({ navigation, route }) {
     DaleteUser(id).then(async (result) => {
       console.log(id, result.data);
       if (result.data == 1) {
-        navigation.navigate("SearchEditUserAdmin");
+        navigation.goBack();
       }
     });
   }
 
-  function _UpdateUser() {
-    console.log(value);
-    UpdateUser(data.ID_User, {
-      Posittions_ID: value,
-    })
-      .then(async (result) => {
-        await AsyncStorage.setItem("user", JSON.stringify(result.data));
-        setUser(result.data);
-        navigation.navigate("SearchEditUserAdmin");
-      })
-      .catch((e) => {
-        navigation.navigate("SearchEditUserAdmin");
-      });
-  }
+  // function _UpdateUser() {
+  //   console.log(value);
+  //   UpdateUser(data.ID_User, {
+  //     Posittions_ID: value,
+  //   })
+  //     .then(async (result) => {
+  //       await AsyncStorage.setItem("user", JSON.stringify(result.data));
+  //       setUser(result.data);
+  //       navigation.navigate("SearchEditUserAdmin");
+  //     })
+  //     .catch((e) => {
+  //       navigation.navigate("SearchEditUserAdmin");
+  //     });
+  // }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -218,7 +218,7 @@ export default function ShowEditUser({ navigation, route }) {
                   >
                     <Pressable
                       style={[styles.button, styles.buttonClose]}
-                      onPress={() => navigation.navigate("SearchEditUserAdmin")}
+                      onPress={() => navigation.goBack()}
                     >
                       <Text style={styles.textStyle}>ยืนยัน</Text>
                     </Pressable>
